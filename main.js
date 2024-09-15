@@ -11,65 +11,93 @@ function getComputerChoice() {
     }
 }
 
-function getHumanChoice() {
-    let choice = prompt("Rock, Paper or Scissors?");
-    return choice;
-}
-
 function playRound(humanChoice, computerChoice) {
     if (humanChoice === "rock" && computerChoice === "paper") {
-        console.log("You lose! Paper beats Rock")
-        return "computer";
+        resultsText.textContent = ("You lose! Paper beats Rock");
+        computerScore++;
     }
     else if (humanChoice === "paper" && computerChoice === "rock") {
-        console.log("You win! Paper beats Rock")
-        return "human";
+        resultsText.textContent = ("You win! Paper beats Rock");
+        humanScore++;
     }
     else if (humanChoice === "rock" && computerChoice === "scissors") {
-        console.log("You win! Rock beats Scissors")
-        return "human";
+        resultsText.textContent = ("You win! Rock beats Scissors");
+        humanScore++;
     }
     else if (humanChoice === "scissors" && computerChoice === "rock") {
-        console.log("You lose! Rock beats Scissors")
-        return "computer";
+        resultsText.textContent = ("You lose! Rock beats Scissors");
+        computerScore++;
     }
     else if (humanChoice === "paper" && computerChoice === "scissors") {
-        console.log("You lose! Scissors beat Paper")
-        return "computer";
+        resultsText.textContent = ("You lose! Scissors beat Paper");
+        computerScore++;
     }
     else if (humanChoice === "scissors" && computerChoice === "paper") {
-        console.log("You win! Scissors beat Paper")
-        return "human";
+        resultsText.textContent = ("You win! Scissors beat Paper");
+        humanScore++;
     }
     else if (humanChoice === computerChoice) {
-        console.log("It's a tie!")
+        resultsText.textContent = ("It's a tie!")
     }
 }
 
-function playGame() {
-    let humanScore = 0, computerScore = 0;
+rockButton = document.createElement("button");
+paperButton = document.createElement("button");
+scissorsButton = document.createElement("button");
 
-    for (let i = 0; i < 5; i++) {
-        const humanSelection = getHumanChoice().toLowerCase();
-        const computerSelection = getComputerChoice();
-        roundResult = playRound(humanSelection, computerSelection);
-        if (roundResult === "human") {
-            humanScore++;
+rockButton.textContent = "Rock";
+paperButton.textContent = "Paper";
+scissorsButton.textContent = "Scissors";
+
+container = document.querySelector("#container");
+container.appendChild(rockButton);
+container.appendChild(paperButton);
+container.appendChild(scissorsButton);
+
+let computerChoice = getComputerChoice();
+
+let computerScore = 0;
+let humanScore = 0;
+
+resultsDiv = document.createElement("div");
+resultsText = document.createElement("p");
+container.appendChild(resultsDiv);
+resultsDiv.appendChild(resultsText);
+resultsScore = document.createElement("p")
+resultsScore.textContent = "You: 0 - Computer: 0"
+resultsDiv.appendChild(resultsScore);
+
+container.addEventListener("click", function(e) {
+    switch(e.target.innerText) {
+        case("Rock"):
+            playRound("rock", computerChoice);
+            break;
+            
+        case("Paper"):
+            playRound("paper", computerChoice);
+            break;
+            
+        case("Scissors"):
+            playRound("scissors", computerChoice);
+            break;
+    }
+    computerChoice = getComputerChoice();
+    resultsScore.textContent = `You: ${humanScore} - Computer: ${computerScore}`
+    if(humanScore === 5 || computerScore === 5) {
+        finalText = document.createElement("p");
+        switch(humanScore > computerScore) {
+            case(true):
+                container.remove();
+                finalText.textContent = `You won ${humanScore} - ${computerScore}!`;
+                finalText.style = "color: green";
+                break;
+            case(false):
+                container.remove();
+                finalText.textContent = `You lost ${humanScore} - ${computerScore}!`;
+                finalText.style = "color: red";
+                break;
         }
-        else if (roundResult === "computer") {
-            computerScore++;
-        }
+        body = document.querySelector("body");
+        body.appendChild(finalText);
     }
-
-    if (humanScore > computerScore) {
-        console.log("You won the game!");
-    }
-    else if (humanScore < computerScore) {
-        console.log("You lost the game!");
-    }
-    else {
-        console.log("The game is a tie!");
-    }
-}
-
-playGame();
+})
